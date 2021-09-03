@@ -6,13 +6,15 @@ from socket import gaierror
 
 
 contacts_file = os.getcwd()+'/files/people.xlsx'
+message_file = os.getcwd()+'/files/message.txt'
 contacts_frame = pd.read_excel(contacts_file)
 # print(contacts)
 # Contacts file include Fnamem Lname email address and age
 
-# Build the body of the mail
 num_contacts = len(contacts_frame)
-def buildMail(fname, lname, email_add, add, age) :
+attachments_list = [contacts_file, message_file]
+# Build the body of the mail
+def buildMail(fname, lname, email_add, add, age, file_attachments) :
     msg = f"""
     Hello {fname},
     I hope you are doing well. 
@@ -26,6 +28,9 @@ def buildMail(fname, lname, email_add, add, age) :
     mail_obj['To'] = f"{fname+lname}<{email_add}>"
     mail_obj['From'] = "sender<yourmail@mmail.com>"
     mail_obj.set_content(msg)
+    if len(file_attachments) > 0 :
+        for attach in file_attachments :
+            mail_obj.add_attachment(attach)
     return mail_obj
 
 try :
@@ -39,7 +44,7 @@ try :
         email_add = contacts_frame.loc[i, 'email']
         loc_add = contacts_frame.loc[i, 'address']
         age = contacts_frame.loc[i, 'age']
-        email_body  = buildMail(fname, lname, email_add, loc_add, age)
+        email_body  = buildMail(fname, lname, email_add, loc_add, age, attachments_list)
         server_con.send_message(email_body)
         print("Email sent successfully!!" + str(fname+lname))
 except (gaierror, ConnectionRefusedError):
