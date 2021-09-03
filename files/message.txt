@@ -1,0 +1,5 @@
+Hello {fname},
+    I hope you are doing well. 
+    We are sending this test mail to you as part of a bulk mailing scheme. 
+    We currently have several contacts and will be updated them as well.
+    Please confirm that you are {age} and living at {add}.
